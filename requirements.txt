@@ -5,3 +5,7 @@ pytesseract==0.3.13
 python_docx==1.1.2
 uvicorn[standard]
 python-multipart
+pdf2image
+tempfile
+opencv-python-headless==4.5.4.60
+easyocr==1.6.2

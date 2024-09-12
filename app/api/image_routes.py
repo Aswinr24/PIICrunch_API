@@ -5,19 +5,23 @@ from app.utils.pii_detection import detect_pii
 from app.utils.image_processing import preprocess_image, get_pii_regions, mask_or_blur_image
 from PIL import Image
 import io
-import pytesseract
+# import pytesseract
+import easyocr
 
 router = APIRouter()
+reader = easyocr.Reader(['en'])
 
 @router.post("/detect")
 async def detect_pii_image(file: UploadFile = File(...)):
     contents = await file.read()
 
     if file.content_type in ["image/jpeg", "image/png"]:
-        image = Image.open(io.BytesIO(contents))
-        text = pytesseract.image_to_string(image)
-        pii_types = detect_pii(text)
-        return {"detected_pii": pii_types}
+        # image = Image.open(io.BytesIO(contents))
+        # text = pytesseract.image_to_string(image)
+        results = reader.readtext(contents)
+        text = " ".join([result[1] for result in results])
+        pii_types, document_type = detect_pii(text) 
+        return {"document_type": document_type, "detected_pii": pii_types}
     
     return JSONResponse(status_code=400, content={"error": "Invalid image format. Only JPG and PNG are supported."})
 
@@ -36,3 +40,4 @@ async def redact_image(file: UploadFile = File(...), action: str = Form(...)):
         return StreamingResponse(output, media_type="image/png", headers={"Content-Disposition": "attachment; filename=processed_image.png"})
     
     return JSONResponse(status_code=400, content={"error": "Invalid image format. Only JPG and PNG are supported."})
+ 

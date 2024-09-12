@@ -20,7 +20,6 @@ def preprocess_image(image: Image.Image) -> Image.Image:
 #     with open(image_path, 'rb') as image_file:
 #         image_bytes = image_file.read()
 #     response = textract_client.detect_document_text(Document={'Bytes': image_bytes})
-
 #     detected_pii_regions = []
     
 #     # Open the image to get its dimensions

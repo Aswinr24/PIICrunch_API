@@ -1,0 +1,23 @@
+{
+    "Aadhaar Card": [
+        "Aadhaar",
+        "Unique Identification Authority of India",
+        "UIDAI",
+        "Government of India",
+        "Enrolment No."
+    ],
+    "PAN Card": [
+        "Income tax department",
+        "Permanent account number"
+    ],
+    "Voter ID": [
+        "Election Commission of India",
+        "Electoral Registration Officer"
+    ],
+    "Driving License": [
+        "Indian union motor driving licence",
+        "driving license",
+        "DOI",
+        "Dl No"
+    ]
+}

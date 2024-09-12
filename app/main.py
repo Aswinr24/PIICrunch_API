@@ -18,4 +18,4 @@ app.include_router(docx_routes.router, prefix="/docx", tags=["docx"])
 
 @app.get("/")
 async def read_root():
-    return {"message": "Welcome to the PII Crunch API!"}
+    return {"message": "Welcome to the PII Crunch API!"}                                                                                                                                                                                                                                  

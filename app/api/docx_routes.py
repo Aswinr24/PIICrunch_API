@@ -39,7 +39,6 @@ async def redact_docx(file: UploadFile = File(...), pii_to_redact: str = Form("a
             redacted_doc, redacted_texts = redact_docx_content(doc, document_type)
         else:
             pii_to_redact_list = [item.strip() for item in pii_to_redact.split(",")]
-            print(pii_to_redact_list)
             redacted_doc, redacted_texts = process_docx_file(doc, document_type, pii_to_redact_list)
 
         output = io.BytesIO()

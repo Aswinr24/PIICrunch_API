@@ -94,8 +94,8 @@ def redact_specific_pii(image, results, doc_type, pii_to_redact_list):
         'Date of Birth': ['dob_start_pattern', 'dob_end_pattern'],
         'Aadhaar Number': ['aadhar_pattern'],
         'PAN Number': ['pan_pattern'],
-        'Driving License Number': ['vid_pattern'],
-        'VID Number': ['license_pattern'],
+        'Driving License Number': ['license_pattern'],
+        'VID Number': ['vid_pattern'],
         'Voter ID Number': ['voter_id_pattern']
     }
     for pii_to_redact in pii_to_redact_list:

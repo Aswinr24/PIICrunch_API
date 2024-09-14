@@ -8,7 +8,7 @@ PIICrunch API provides endpoints for handling PII (Personally Identifiable Infor
 
 #### POST /image/detect
 
-Detects PII tags from an image.
+Detects PII from an image.
 
 - **Request Parameters**: Multipart/form-data with an image file.
 - **Response**: JSON object with detected PII tags.
@@ -24,19 +24,33 @@ Redacts PII from an image.
 
 #### POST /pdf/detect
 
-Detects PII tags from a PDF.
+Detects PII from a PDF.
 
 - **Request Parameters**: Multipart/form-data with the pdf file.
 - **Response**: JSON object with detected PII tags.
+
+#### POST /pdf/redact
+
+Redacts PII from a PDF.
+
+- **Request Body**: Multipart/form-data with a pdf file.
+- **Response**: Redacted image.
 
 ### DOCX Endpoints
 
 #### POST /docx/detect
 
-Detects PII tags from a docx file.
+Detects PII from a docx file.
 
 - **Request Parameters**: Multipart/form-data with the docx file.
 - **Response**: JSON object with detected PII tags.
+
+#### POST /docx/redact
+
+Redacts PII from a docx file.
+
+- **Request Body**: Multipart/form-data with a docx file.
+- **Response**: Redacted image.
 
 ## Running the Application
 

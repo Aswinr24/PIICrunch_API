@@ -91,7 +91,6 @@ def redact_specific_pii(text, pii_to_redact_list, document_type):
                 else:
                     if pattern_name in redaction_patterns.get(document_type, {}):
                         patterns_to_redact[pattern_name] = redaction_patterns[document_type][pattern_name]
-    print(patterns_to_redact)
     return redact_specific_patterns(text, patterns_to_redact)
 
 def process_docx_file(doc: Document, document_type: str, pii_to_redact_list: list):

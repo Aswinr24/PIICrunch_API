@@ -21,9 +21,15 @@ def detect_pii(text: str) -> Tuple[List[str], str]:
         if details.get("regex"):
             for pattern in details["regex"]:
                 if re.search(pattern, text):
+                    
                     detected_pii.append(category)
-                    if document_type == "Govt document type unidentified":
-                        document_type = category  
-                    break
-
+                    
     return detected_pii, document_type
+
+def detect_docType(text: str) -> str:
+    document_type = "unidentified"  
+    for doc_type, keywords in document_keywords.items():
+        if any(keyword.lower() in text.lower() for keyword in keywords):
+            document_type = doc_type
+            break
+    return document_type

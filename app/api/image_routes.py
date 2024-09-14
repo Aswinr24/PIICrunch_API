@@ -1,15 +1,16 @@
 from fastapi import APIRouter, UploadFile, File, Form
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from typing import List
-from app.utils.pii_detection import detect_pii
-from app.utils.image_processing import preprocess_image, get_pii_regions, mask_or_blur_image
-from PIL import Image
+from app.utils.pii_detection import detect_pii, detect_docType
+from app.utils.image_processing import redact, redact_specific_pii
+import cv2
 import io
 # import pytesseract
+import numpy as np
 import easyocr
 
 router = APIRouter()
-reader = easyocr.Reader(['en'])
+reader = easyocr.Reader(['en'], gpu=False)
 
 @router.post("/detect")
 async def detect_pii_image(file: UploadFile = File(...)):
@@ -26,18 +27,30 @@ async def detect_pii_image(file: UploadFile = File(...)):
     return JSONResponse(status_code=400, content={"error": "Invalid image format. Only JPG and PNG are supported."})
 
 @router.post("/redact")
-async def redact_image(file: UploadFile = File(...), action: str = Form(...)):
-    contents = await file.read()
-
+async def redact_image(file: UploadFile = File(...), pii_to_redact: str = Form("all")):
+    contents = await file.read() 
+    pii_to_redact_list = pii_to_redact.split(",")
     if file.content_type in ["image/jpeg", "image/png"]:
-        image = Image.open(io.BytesIO(contents))
-        preprocessed_image = preprocess_image(image)
-        pii_regions = get_pii_regions(image)
-        processed_image = mask_or_blur_image(image, pii_regions, action)
-        output = io.BytesIO()
-        processed_image.save(output, format="PNG")
+        np_array = np.frombuffer(contents, np.uint8)
+        image = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
+        
+        if image is None:
+            return {"error": "Unable to decode the image. Please check the file format."}
+        results = reader.readtext(image)
+        text = " ".join([result[1] for result in results])
+        document_type = detect_docType(text)
+        
+        if pii_to_redact == 'all':
+            processed_image = redact(image, results, document_type)
+        else:
+            processed_image = redact_specific_pii(image, results, document_type, pii_to_redact_list)
+        
+        success, img_encoded = cv2.imencode('.png', processed_image)
+        if not success:
+            return {"error": "Failed to encode the image."}
+        
+        output = io.BytesIO(img_encoded.tobytes())
         output.seek(0)
         return StreamingResponse(output, media_type="image/png", headers={"Content-Disposition": "attachment; filename=processed_image.png"})
-    
+
     return JSONResponse(status_code=400, content={"error": "Invalid image format. Only JPG and PNG are supported."})
- 

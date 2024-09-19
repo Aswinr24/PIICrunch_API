@@ -2,16 +2,17 @@
     "common": {
       "address_start_pattern": "(\\bAdd\\b|\\bAddress\\b|\\bEnrolment\\b)",
       "address_end_pattern": "\\b\\d{6}\\b",
-      "phone_no_pattern": "\\b\\d{10}\\b",
-      "dob_start_pattern": "(\\bDOB\\b|\\bD.O.B\\b|\\bDate of Birth\\b)",
-      "dob_end_pattern": "\\b(0[1-9]|[12][0-9]|3[01])[-\\/](0[1-9]|1[0-2])[-\\/]\\d{4}\\b"
+      "phone_no_pattern": "\\b\\d{10}\\b", 
+      "dob_pattern": "\\b(0[1-9]|[12][0-9]|3[01])[-\\/](0[1-9]|1[0-2])[-\\/]\\d{4}\\b",
+      "name_pattern":"\\b(Name|Name :)\\b",
+      "fathers_name_pattern":"\\b(Father's Name|Father' s Name|S/O:|S/D/W)\\b"
     },
     "Aadhaar Card": {
       "vid_pattern": "\\b\\d{4}\\s\\d{4}\\s\\d{4}\\s\\d{4}\\b",
       "aadhar_pattern": "^(?:\\d{4} \\d{4} \\d{4})(?! \\d{4})$"
     },
     "Driving License": {
-      "license_pattern": "\\b[A-Z0-9]{4}\\s\\d{11}\\b"
+      "license_pattern": "\\b[A-Z]{2}[-]?[0-9]{2}\\s?[0-9]{11,13}\\b"
     },
     "Voter ID": {
       "voter_id_pattern": "\\b[A-Z]{3}\\d{7}\\b"

@@ -20,6 +20,8 @@ async def detect_pii_image(file: UploadFile = File(...)):
         # image = Image.open(io.BytesIO(contents))
         # text = pytesseract.image_to_string(image)
         results = reader.readtext(contents)
+        for text in results:
+            print(text)
         text = " ".join([result[1] for result in results])
         pii_types, document_type = detect_pii(text) 
         return {"document_type": document_type, "detected_pii": pii_types}

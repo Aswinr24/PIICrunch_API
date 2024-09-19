@@ -13,9 +13,8 @@ def mask_text(image, bbox):
 def redact_common_patterns(image, results, patterns):
     redacted_texts = []
     start_redact = False
-    start_redact2 = False
     
-    for bbox, text, _ in results:
+    for i,(bbox, text, _) in enumerate(results):
         if 'address_start_pattern' in patterns and re.search(patterns['address_start_pattern'], text, re.IGNORECASE):
             print(f"Redaction Start: {text}")
             start_redact = True
@@ -30,27 +29,29 @@ def redact_common_patterns(image, results, patterns):
             print(f"Redacting: {text}")
             redacted_texts.append(text)
             mask_text(image, bbox)
-
+            
         if 'phone_no_pattern' in patterns and re.search(patterns['phone_no_pattern'], text):
             print(f"Redacting Phone Number: {text}")
             redacted_texts.append(text)
             mask_text(image, bbox)
 
-        if 'dob_start_pattern' in patterns and re.search(patterns['dob_start_pattern'], text, re.IGNORECASE):
+        if 'dob_pattern' in patterns and re.search(patterns['dob_pattern'], text, re.IGNORECASE):
             print(f"Redaction Start: {text}")
-            start_redact2 = True
-            redacted_texts.append(text)
-            mask_text(image, bbox)
-        if start_redact2 and re.search(patterns['dob_end_pattern'], text):
-            print(f"Redacting DOB: {text}")
-            redacted_texts.append(text)
-            mask_text(image, bbox)
-            start_redact2 = False
-        elif start_redact2:
-            print(f"Redacting: {text}")
             redacted_texts.append(text)
             mask_text(image, bbox)
 
+        if 'name_pattern' in patterns and re.search(patterns['name_pattern'], text, re.IGNORECASE):
+            print(f"Redacting Name: {text}")
+            next_bbox, next_text, _ = results[i + 1]
+            redacted_texts.append(next_text)
+            mask_text(image, next_bbox)
+        
+        if 'fathers_name_pattern' in patterns and re.search(patterns['name_pattern'], text, re.IGNORECASE):
+            print(f"Redacting Name: {text}")
+            next_bbox, next_text, _ = results[i + 1]
+            redacted_texts.append(next_text)
+            mask_text(image, next_bbox)
+            
     return image, redacted_texts
 
 def redact_specific_patterns(image, results, patterns):
@@ -85,13 +86,14 @@ def redact(image, results, doc_type):
 
 def redact_specific_pii(image, results, doc_type, pii_to_redact_list):
     redacted_texts = []
-
     common_patterns = redaction_patterns['common']
     specific_patterns = redaction_patterns.get(doc_type, {})
     pii_mapping = {
         'Address': ['address_start_pattern', 'address_end_pattern'],
         'Phone Number': ['phone_no_pattern'],
-        'Date of Birth': ['dob_start_pattern', 'dob_end_pattern'],
+        'Date of Birth': ['dob_pattern'],
+        'Name': ['name_pattern'],
+        'Father\'s Name': ['fathers_name_pattern'],
         'Aadhaar Number': ['aadhar_pattern'],
         'PAN Number': ['pan_pattern'],
         'Driving License Number': ['license_pattern'],

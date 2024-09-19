@@ -17,7 +17,7 @@ Detects PII from an image.
 
 Redacts PII from an image.
 
-- **Request Body**: Multipart/form-data with an image file.
+- **Request Body**: Multipart/form-data with an image file and a form field for `pii_to_redact` (comma-separated list of PII types to redact).
 - **Response**: Redacted image.
 
 ### PDF Endpoints
@@ -33,7 +33,7 @@ Detects PII from a PDF.
 
 Redacts PII from a PDF.
 
-- **Request Body**: Multipart/form-data with a pdf file.
+- **Request Body**: Multipart/form-data with a pdf file and a form field for `pii_to_redact` (comma-separated list of PII types to redact).
 - **Response**: Redacted image.
 
 ### DOCX Endpoints
@@ -49,7 +49,7 @@ Detects PII from a docx file.
 
 Redacts PII from a docx file.
 
-- **Request Body**: Multipart/form-data with a docx file.
+- **Request Body**: Multipart/form-data with a docx file and a form field for `pii_to_redact` (comma-separated list of PII types to redact).
 - **Response**: Redacted image.
 
 ## Running the Application

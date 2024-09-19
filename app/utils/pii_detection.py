@@ -10,8 +10,7 @@ with open('keywords.json') as f:
 
 def detect_pii(text: str) -> Tuple[List[str], str]:
     detected_pii = []
-    document_type = "Govt document type unidentified"  
-
+    document_type = "Govt document type unidentified"   
     for doc_type, keywords in document_keywords.items():
         if any(keyword.lower() in text.lower() for keyword in keywords):
             document_type = doc_type
@@ -21,9 +20,7 @@ def detect_pii(text: str) -> Tuple[List[str], str]:
         if details.get("regex"):
             for pattern in details["regex"]:
                 if re.search(pattern, text):
-                    
-                    detected_pii.append(category)
-                    
+                    detected_pii.append(category)              
     return detected_pii, document_type
 
 def detect_docType(text: str) -> str:
